@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.urls import reverse
 
 # Create your views here.
-
 posts = [
     {"id": 1,
      "title": "one",
@@ -19,7 +19,7 @@ def home(request):
     html = ""
     for post in posts:
         html += f'''
-            <div>
+        <div>
         <a href="/post/{post['id']}/">
             <h1>{post['id']} - {post['title']}</h1> 
         </a>
@@ -27,11 +27,10 @@ def home(request):
         </div>  
         '''
 
-    return HttpResponse(html)
+    return render(request, 'posts/home.html', {"name": "Taranjot"})
 
 def post(request, id):
     valid_id = False
-
     for post in posts:
         if post['id'] == id:
             post_dict = post
@@ -52,4 +51,5 @@ def local(request, local_name):
     return HttpResponse(f"<h1>{local_name}</h1>")
 
 def google(request, id):
-    return HttpResponseRedirect(f"/post/{id}/")
+    url = reverse("post", args=[id])
+    return HttpResponseRedirect(url)
